@@ -1,0 +1,59 @@
+---
+import { SITE } from "../config/site";
+import ThemePicker from "../components/ThemePicker.astro";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import "../styles/motion.css";
+
+interface Props {
+    title?: string;
+    description?: string;
+    type?: "website" | "article";
+}
+
+const { title = SITE.title, description = SITE.description, type = "website" } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
+const favicon = `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${SITE.emoji}</text></svg>`,
+)}`;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <script is:inline>
+            try {
+                const theme = localStorage.getItem("theme");
+                if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+            } catch {}
+        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={pageUrl} />
+        <link rel="icon" href={favicon} />
+        <link rel="preload" href="/fonts/Figtree-Variable.woff2" as="font" type="font/woff2" crossorigin />
+
+        <meta property="og:type" content={type} />
+        <meta property="og:site_name" content={SITE.name} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={pageUrl} />
+        <meta name="twitter:card" content="summary" />
+    </head>
+    <body>
+        <ThemePicker />
+        <div class="column">
+            <slot />
+        </div>
+    </body>
+</html>
+
+<style>
+    .column {
+        max-width: calc(var(--column-width) + 2 * var(--gutter));
+        margin-inline: auto;
+        padding: 4rem var(--gutter) 2rem;
+    }
+</style>

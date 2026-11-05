@@ -1,0 +1,46 @@
+@keyframes enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+}
+
+main > *,
+footer {
+    --enter-delay: 0.28s;
+    animation: enter 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) var(--enter-delay) backwards;
+}
+
+main > :nth-child(1) {
+    --enter-delay: 0s;
+}
+
+main > :nth-child(2) {
+    --enter-delay: 0.07s;
+}
+
+main > :nth-child(3) {
+    --enter-delay: 0.14s;
+}
+
+main > :nth-child(4) {
+    --enter-delay: 0.21s;
+}
+
+footer {
+    --enter-delay: 0.35s;
+}
+
+a {
+    transition: text-decoration-thickness 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after,
+    ::backdrop {
+        animation: none !important;
+        transition: none !important;
+    }
+}

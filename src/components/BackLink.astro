@@ -1,0 +1,28 @@
+---
+interface Props {
+    href: string;
+    label: string;
+}
+
+const { href, label } = Astro.props;
+---
+
+<a {href}>{label}</a>
+
+<style>
+    a {
+        display: inline-block;
+        font-size: 1rem;
+    }
+
+    a::before {
+        content: "←";
+        display: inline-block;
+        margin-right: 0.25em;
+        transition: transform 0.15s ease;
+    }
+
+    a:hover::before {
+        transform: translateX(-3px);
+    }
+</style>

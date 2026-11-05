@@ -1,0 +1,315 @@
+---
+import { render } from "astro:content";
+import { SITE } from "../../config/site";
+import Layout from "../../layouts/Layout.astro";
+import BackLink from "../../components/BackLink.astro";
+import Footer from "../../components/Footer.astro";
+import Terminal from "../../components/Terminal.astro";
+import { formatDate, getPosts } from "../../lib/posts";
+
+export async function getStaticPaths() {
+    const posts = await getPosts();
+    return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { title, date, description } = post.data;
+const { Content } = await render(post);
+---
+
+<Layout title={`${title} · ${SITE.title}`} description={description} type="article">
+    <main>
+        <div class="back"><BackLink href="/blog/" label="All posts" /></div>
+        <article>
+            <h1>{title}</h1>
+            <time datetime={date.toISOString()}>{formatDate(date)}</time>
+            <div class="prose">
+                <Content />
+            </div>
+        </article>
+        <div class="back end"><BackLink href="/blog/" label="All posts" /></div>
+    </main>
+    <template id="copy-button-template">
+        <button type="button" class="copy-button" title="Copy code">
+            <span class="copy-status" aria-live="polite">Copy code</span>
+            <svg class="icon-copy" viewBox="0 0 16 16" aria-hidden="true">
+                <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+                <path d="M10.5 3v-.5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1H3" />
+            </svg>
+            <svg class="icon-copied" viewBox="0 0 16 16" aria-hidden="true">
+                <path pathLength="1" d="M3 8.5 6.5 12 13 4.5" />
+            </svg>
+            <svg class="icon-failed" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 4l8 8M12 4l-8 8" />
+            </svg>
+        </button>
+    </template>
+    <Footer />
+    <Terminal />
+</Layout>
+
+<script>
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(".prose a")) {
+        if (link.protocol.startsWith("http") && link.origin !== location.origin) {
+            link.target = "_blank";
+            link.rel = "noopener";
+        }
+    }
+
+    const template = document.querySelector<HTMLTemplateElement>("#copy-button-template")!;
+
+    if (navigator.clipboard) {
+        for (const pre of document.querySelectorAll(".prose pre")) {
+            const block = document.createElement("div");
+            block.className = "code-block";
+            pre.replaceWith(block);
+
+            const button = template.content.firstElementChild!.cloneNode(true) as HTMLButtonElement;
+            const status = button.querySelector(".copy-status")!;
+
+            const show = (label: string, state?: "copied" | "failed") => {
+                status.textContent = label;
+                button.title = label;
+                if (state) button.dataset.state = state;
+                else delete button.dataset.state;
+            };
+
+            let timer: ReturnType<typeof setTimeout>;
+            button.addEventListener("click", async () => {
+                clearTimeout(timer);
+                try {
+                    await navigator.clipboard.writeText(pre.textContent ?? "");
+                    show("Copied", "copied");
+                } catch {
+                    show("Copy failed", "failed");
+                }
+                timer = setTimeout(() => show("Copy code"), 3000);
+            });
+
+            block.append(pre, button);
+        }
+    }
+</script>
+
+<style>
+    main {
+        padding-bottom: 2.5rem;
+    }
+
+    .back {
+        margin-bottom: 1.5rem;
+    }
+
+    .end {
+        margin: 2.5rem 0 0;
+    }
+
+    h1 {
+        margin-bottom: 0.5rem;
+        font-size: 2.4rem;
+        overflow-wrap: anywhere;
+    }
+
+    time {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
+
+    .prose {
+        margin-top: 2rem;
+        overflow-wrap: anywhere;
+    }
+
+    .prose :global(h2),
+    .prose :global(h3),
+    .prose :global(h4) {
+        margin: 2rem 0 0.5rem;
+        line-height: 1.3;
+    }
+
+    .prose :global(h2) {
+        font-size: 1.5rem;
+    }
+
+    .prose :global(h3) {
+        font-size: 1.25rem;
+    }
+
+    .prose :global(h4) {
+        font-size: 1.125rem;
+    }
+
+    .prose :global(ul),
+    .prose :global(ol) {
+        margin: 0 0 1rem;
+        padding-left: 1.5rem;
+        color: var(--text-secondary);
+    }
+
+    .prose :global(li) {
+        margin-block: 0.25rem;
+    }
+
+    .prose :global(li > input[type="checkbox"]) {
+        margin: 0 0.375rem 0 -1.25rem;
+        accent-color: var(--accent);
+    }
+
+    .prose :global(blockquote) {
+        margin: 0 0 1rem;
+        padding-left: 1rem;
+        border-left: var(--border-width) solid var(--accent);
+    }
+
+    .prose :global(blockquote > :last-child) {
+        margin-bottom: 0;
+    }
+
+    .prose :global(hr) {
+        margin: 2rem 0;
+        border: 0;
+        border-top: var(--border-width) solid var(--border);
+    }
+
+    .prose :global(img) {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .prose :global(code) {
+        padding: 0.0625rem 0.3125rem;
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg-surface);
+        font-family: var(--font-mono);
+        font-size: 0.875em;
+    }
+
+    .prose :global(pre) {
+        margin: 0 0 1rem;
+        padding: 0.75rem 1rem;
+        overflow-x: auto;
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg-surface);
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .prose :global(pre code) {
+        padding: 0;
+        border: 0;
+        background: none;
+        overflow-wrap: normal;
+    }
+
+    .prose :global(pre span) {
+        color: light-dark(var(--shiki-light), var(--shiki-dark));
+    }
+
+    .prose :global(.code-block) {
+        position: relative;
+    }
+
+    .prose :global(.copy-button) {
+        display: grid;
+        place-items: center;
+        position: absolute;
+        top: 0.375rem;
+        right: 0.375rem;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg-surface);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition:
+            color 0.15s ease,
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+
+    .prose :global(.copy-button:hover) {
+        background: var(--bg-page);
+    }
+
+    .prose :global(.copy-button[data-state="copied"]) {
+        border-color: var(--success);
+        color: var(--success);
+        animation: copied-pop 0.25s ease-out;
+    }
+
+    .prose :global(.icon-copied path) {
+        stroke-dasharray: 1;
+        animation: draw-check 0.25s ease-out;
+    }
+
+    @keyframes copied-pop {
+        40% {
+            transform: scale(1.12);
+        }
+    }
+
+    @keyframes draw-check {
+        from {
+            stroke-dashoffset: 1;
+        }
+    }
+
+    .prose :global(.copy-status) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .prose :global(.copy-button svg) {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .prose :global(.copy-button:not([data-state]) .icon-copy),
+    .prose :global(.copy-button[data-state="copied"] .icon-copied),
+    .prose :global(.copy-button[data-state="failed"] .icon-failed) {
+        display: block;
+    }
+
+    .prose :global(table) {
+        display: block;
+        max-width: 100%;
+        margin: 0 0 1rem;
+        overflow-x: auto;
+        border-collapse: collapse;
+        font-size: 1rem;
+        overflow-wrap: normal;
+    }
+
+    .prose :global(th),
+    .prose :global(td) {
+        padding: 0.375rem 0.75rem;
+        border: var(--border-width) solid var(--border);
+        text-align: left;
+    }
+
+    .prose :global(th) {
+        background: var(--bg-surface);
+    }
+
+    .prose :global(.footnotes) {
+        margin-top: 2rem;
+        padding-top: 0.5rem;
+        border-top: var(--border-width) solid var(--border);
+        font-size: 1rem;
+    }
+</style>

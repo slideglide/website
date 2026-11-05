@@ -1,0 +1,319 @@
+---
+import { formatDate, getPosts } from "../lib/posts";
+import { SITE } from "../config/site";
+
+const posts = (await getPosts()).map(({ id, data }) => ({
+    title: data.title,
+    date: formatDate(data.date),
+    url: `/blog/${id}/`,
+}));
+---
+
+<dialog id="terminal" aria-labelledby="terminal-title" data-posts={JSON.stringify(posts)} data-generator={Astro.generator}>
+    <div class="bar">
+        <span id="terminal-title">visitor@{SITE.shortName}: ~</span>
+        <button type="button" id="terminal-close">close</button>
+    </div>
+    <div id="terminal-output" class="output" role="log" aria-live="polite" aria-label="Terminal output" tabindex="0">
+    </div>
+    <form id="terminal-form" class="prompt">
+        <span id="terminal-prompt" class="prompt-label" aria-hidden="true"></span>
+        <label class="visually-hidden" for="terminal-input">Terminal command</label>
+        <div class="field">
+            <input
+                id="terminal-input"
+                type="text"
+                role="combobox"
+                aria-autocomplete="both"
+                aria-expanded="false"
+                aria-controls="terminal-pager"
+                aria-describedby="terminal-hint"
+                autocomplete="off"
+                autocapitalize="off"
+                autocorrect="off"
+                spellcheck="false"
+                enterkeyhint="send"
+            />
+            <div id="terminal-overlay" class="overlay" aria-hidden="true"></div>
+        </div>
+        <button type="button" id="terminal-tab" class="tab-button" aria-label="Complete command">tab</button>
+        <span id="terminal-hint" class="visually-hidden">
+            Tab completes, right arrow accepts a suggestion, up arrow searches history, Escape closes.
+        </span>
+    </form>
+    <ul id="terminal-pager" class="pager" role="listbox" aria-label="Completions" hidden></ul>
+</dialog>
+
+<script>
+    import "../scripts/terminal";
+</script>
+
+<style>
+    dialog {
+        width: min(var(--column-width), calc(100% - 2 * var(--gutter)));
+        height: min(34rem, calc(100dvh - 2 * var(--gutter)));
+        padding: 0;
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg-surface);
+        box-shadow: var(--shadow-hover);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+    }
+
+    dialog[open] {
+        display: flex;
+        flex-direction: column;
+        animation: terminal-in 0.2s ease-out;
+    }
+
+    @keyframes terminal-in {
+        from {
+            opacity: 0;
+            transform: translateY(0.5rem);
+        }
+    }
+
+    dialog::backdrop {
+        background: var(--shadow-color);
+        animation: backdrop-in 0.2s ease-out;
+    }
+
+    @keyframes backdrop-in {
+        from {
+            opacity: 0;
+        }
+    }
+
+    .bar {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.5rem 0.75rem;
+        border-bottom: var(--border-width) solid var(--border);
+        color: var(--text-muted);
+    }
+
+    #terminal-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    button {
+        padding: 0.125rem 0.5rem;
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg-surface);
+        color: var(--text-primary);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: var(--bg-page);
+    }
+
+    .output {
+        flex: 1;
+        min-height: 0;
+        padding: 0.75rem;
+        overflow-y: auto;
+        container-type: size;
+    }
+
+    .output :global(p) {
+        margin: 0 0 0.25rem;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    dialog :global(.tone-accent) {
+        color: var(--accent);
+    }
+
+    dialog :global(.tone-success) {
+        color: var(--success);
+    }
+
+    dialog :global(.tone-error) {
+        color: var(--dot-rose);
+    }
+
+    dialog :global(.tone-muted) {
+        color: var(--text-muted);
+    }
+
+    .output :global(.fetch) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.5rem;
+        margin-block: 0.5rem;
+    }
+
+    .output :global(.fetch-logo) {
+        margin: 0;
+        font: inherit;
+        line-height: 1.15;
+    }
+
+    .output :global(.fetch-info) {
+        flex: 1 1 16rem;
+        min-width: 0;
+    }
+
+    .output :global(.fetch-info p) {
+        margin: 0;
+    }
+
+    .output :global(.fetch-info .fetch-palette) {
+        display: flex;
+        margin-top: 0.5rem;
+    }
+
+    .output :global(.fetch-palette span) {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .output :global(.soggy) {
+        width: fit-content;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        border-radius: var(--radius);
+        background: var(--soggy-bg);
+        color: var(--soggy-text);
+        font: inherit;
+        font-size: max(
+            6px,
+            min(
+                0.875rem,
+                calc((100cqw - 1rem) / (var(--columns) * 0.61)),
+                calc((100cqh - 5.5rem) / (var(--rows) * 1.15))
+            )
+        );
+        line-height: 1.15;
+    }
+
+    .prompt {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-top: var(--border-width) solid var(--border);
+    }
+
+    .prompt-label {
+        flex-shrink: 0;
+        white-space: pre;
+    }
+
+    .field {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+    }
+
+    input,
+    .overlay {
+        padding: 0.125rem 0.25rem;
+        font: inherit;
+        line-height: 1.5;
+        letter-spacing: normal;
+    }
+
+    input {
+        display: block;
+        width: 100%;
+        border: 0;
+        border-radius: var(--radius);
+        background: transparent;
+        color: transparent;
+        caret-color: var(--text-primary);
+    }
+
+    input::selection {
+        background: var(--border);
+        color: transparent;
+    }
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        color: var(--text-primary);
+        white-space: pre;
+        pointer-events: none;
+    }
+
+    .tab-button {
+        display: none;
+        flex-shrink: 0;
+    }
+
+    .pager {
+        display: grid;
+        flex-shrink: 0;
+        grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+        max-height: 12rem;
+        margin: 0;
+        padding: 0.25rem 0.5rem 0.5rem;
+        overflow-y: auto;
+        list-style: none;
+    }
+
+    .pager[hidden] {
+        display: none;
+    }
+
+    .pager :global(li) {
+        padding: 0.0625rem 0.25rem;
+        border-radius: var(--radius);
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .pager :global(li:hover) {
+        background: var(--bg-page);
+    }
+
+    .pager :global(li[aria-selected="true"]) {
+        outline: var(--border-width) solid var(--accent);
+        outline-offset: -1px;
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    @media (pointer: coarse) {
+        input,
+        .overlay {
+            font-size: 1rem;
+        }
+
+        .tab-button {
+            display: block;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .prompt {
+            flex-wrap: wrap;
+        }
+
+        .prompt-label {
+            flex-basis: 100%;
+        }
+    }
+</style>

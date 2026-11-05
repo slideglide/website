@@ -1,0 +1,67 @@
+---
+interface Props {
+    id: string;
+    title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<section class="row" aria-labelledby={id}>
+    <h2 id={id}>{title}</h2>
+    <div class="body"><slot /></div>
+</section>
+
+<style>
+    .row {
+        display: grid;
+        grid-template-columns: 6.5rem minmax(0, 1fr);
+        column-gap: 1.25rem;
+    }
+
+    h2 {
+        margin: 0;
+        padding-block: 1.75rem;
+    }
+
+    .body {
+        position: relative;
+        padding: 1.75rem 0 1.75rem 1.25rem;
+    }
+
+    .body::before {
+        content: "";
+        position: absolute;
+        inset-block: 0;
+        left: 0;
+        border-left: var(--border-width) solid var(--border);
+        transform-origin: top;
+        animation: draw-rule 0.5s ease-out var(--enter-delay, 0s) backwards;
+    }
+
+    @keyframes draw-rule {
+        from {
+            transform: scaleY(0);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .row {
+            grid-template-columns: minmax(0, 1fr);
+            padding-block: 1.5rem;
+            border-top: var(--border-width) solid var(--border);
+        }
+
+        h2 {
+            padding-block: 0 0.75rem;
+        }
+
+        .body {
+            padding: 0;
+        }
+
+        .body::before {
+            display: none;
+        }
+    }
+</style>

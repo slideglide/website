@@ -1,0 +1,107 @@
+---
+import { SITE } from "../config/site";
+import Section from "./Section.astro";
+---
+
+<Section id="bio-heading" title="Bio">
+    <dl class="bio">
+        <div>
+            <dt>From</dt>
+            <dd>{SITE.bio.from}</dd>
+        </div>
+        <div>
+            <dt>What I do</dt>
+            <dd>{SITE.bio.work}</dd>
+        </div>
+        <div>
+            <dt>Tools</dt>
+            <dd>
+                <ul class="tools">
+                    {SITE.bio.tools.map((tool) => <li><code>{tool}</code></li>)}
+                </ul>
+            </dd>
+        </div>
+        <div>
+            <dt>Contributes to</dt>
+            <dd>
+                <ul>
+                    {
+                        SITE.bio.contributions.map(({ name, url, note }) => (
+                            <li>
+                                <a href={url} target="_blank" rel="noopener">{name}</a>: {note}
+                            </li>
+                        ))
+                    }
+                </ul>
+                <a class="all" href={SITE.bio.allContributions} target="_blank" rel="noopener">All merged pull requests</a>
+            </dd>
+        </div>
+        <div>
+            <dt>Issues</dt>
+            <dd>{SITE.bio.issues}</dd>
+        </div>
+    </dl>
+</Section>
+
+<style>
+    dl {
+        margin: -0.625rem 0;
+        font-size: 1rem;
+    }
+
+    dl > div {
+        display: grid;
+        grid-template-columns: 7.5rem minmax(0, 1fr);
+        column-gap: 1rem;
+        padding-block: 0.625rem;
+    }
+
+    dl > div + div {
+        border-top: var(--border-width) solid var(--border);
+    }
+
+    dt {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        line-height: 1.6rem;
+    }
+
+    dd {
+        margin: 0;
+        color: var(--text-primary);
+        overflow-wrap: anywhere;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .tools {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+    }
+
+    code {
+        padding: 0.0625rem 0.375rem;
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg-surface);
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+    }
+
+    .all {
+        display: inline-block;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+    }
+
+    @media (max-width: 640px) {
+        dl > div {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+</style>

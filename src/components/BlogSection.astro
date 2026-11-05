@@ -1,0 +1,25 @@
+---
+import { getPosts } from "../lib/posts";
+import PostList from "./PostList.astro";
+import Section from "./Section.astro";
+
+const LATEST = 3;
+const posts = await getPosts();
+---
+
+{
+    posts.length > 0 && (
+        <Section id="blog-heading" title="Blog">
+            <PostList posts={posts.slice(0, LATEST)} heading="h3" />
+            <a class="all" href="/blog/">All posts</a>
+        </Section>
+    )
+}
+
+<style>
+    .all {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-size: 0.875rem;
+    }
+</style>

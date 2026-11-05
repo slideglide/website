@@ -1,0 +1,49 @@
+---
+import { SITE } from "../config/site";
+---
+
+<footer>
+    <span>{SITE.name}, {SITE.year}</span>
+    <button type="button" id="terminal-open" hidden>&gt;<span class="cursor">_</span> terminal</button>
+</footer>
+
+<style>
+    footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem 1rem;
+        padding-top: 1rem;
+        border-top: var(--border-width) solid var(--border);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
+
+    button {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--accent);
+        font: inherit;
+        font-family: var(--font-mono);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.15em;
+        cursor: pointer;
+    }
+
+    button:hover {
+        text-decoration-thickness: 2px;
+    }
+
+    button:hover .cursor {
+        animation: blink 1s steps(2, jump-none) infinite;
+    }
+
+    @keyframes blink {
+        to {
+            opacity: 0;
+        }
+    }
+</style>

@@ -1,0 +1,41 @@
+:root {
+    color-scheme: light dark;
+
+    --font-sans: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --bg-page: light-dark(#dfe5d8, #121614);
+    --bg-surface: light-dark(#e7ece1, #1a1f1c);
+    --border: light-dark(#bfc9b6, #2d3530);
+
+    --text-primary: light-dark(#2f3a33, #d9e0da);
+    --text-secondary: light-dark(#3f4a43, #c9d1cb);
+    --text-muted: light-dark(#55615a, #98a59d);
+    --accent: light-dark(#1f6a58, #5cc2a6);
+    --success: light-dark(#176b2e, #56d364);
+
+    --dot-blue: light-dark(#2f6690, #7fb2e5);
+    --dot-amber: light-dark(#8a5a0a, #d9a441);
+    --dot-rose: light-dark(#a23e55, #e58aa0);
+    --dot-violet: light-dark(#6a4c93, #b79ce0);
+
+    --soggy-bg: #1a1f1c;
+    --soggy-text: #d9e0da;
+
+    --shadow-color: light-dark(#1f2a2414, #00000066);
+
+    --border-width: 1.5px;
+    --radius: 6px;
+    --column-width: 720px;
+    --gutter: 16px;
+
+    --shadow-hover: 0 8px 24px var(--shadow-color), 0 4px 8px var(--shadow-color);
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}

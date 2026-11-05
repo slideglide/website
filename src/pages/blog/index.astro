@@ -1,0 +1,31 @@
+---
+import { SITE } from "../../config/site";
+import Layout from "../../layouts/Layout.astro";
+import BackLink from "../../components/BackLink.astro";
+import Footer from "../../components/Footer.astro";
+import PostList from "../../components/PostList.astro";
+import Terminal from "../../components/Terminal.astro";
+import { getPosts } from "../../lib/posts";
+
+const posts = await getPosts();
+---
+
+<Layout title={`Blog · ${SITE.title}`}>
+    <main>
+        <div class="back"><BackLink href="/" label="Home" /></div>
+        <h1>Blog</h1>
+        {posts.length > 0 ? <PostList posts={posts} heading="h2" /> : <p>No posts yet.</p>}
+    </main>
+    <Footer />
+    <Terminal />
+</Layout>
+
+<style>
+    main {
+        padding-bottom: 2.5rem;
+    }
+
+    .back {
+        margin-bottom: 1.5rem;
+    }
+</style>

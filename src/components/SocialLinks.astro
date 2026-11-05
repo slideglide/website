@@ -1,0 +1,40 @@
+---
+import { SOCIALS } from "../data/socials";
+---
+
+<nav aria-label="Social links">
+    <ul>
+        {
+            SOCIALS.map(({ label, url }) => (
+                <li>
+                    <a href={url} target="_blank" rel="me noopener">
+                        {label}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</nav>
+
+<style>
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.5rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 1rem;
+    }
+
+    a::after {
+        content: "↗";
+        display: inline-block;
+        margin-left: 0.25em;
+        transition: transform 0.15s ease;
+    }
+
+    a:hover::after {
+        transform: translate(2px, -2px);
+    }
+</style>
