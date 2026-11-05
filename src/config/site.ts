@@ -3,7 +3,7 @@ export const SITE = {
     shortName: "slideglide",
     emoji: "🌿",
     title: "slideglide",
-    description: "Placeholder description for this personal website.",
+    description: "slideglide's personal website",
     url: "https://slideglide.github.io",
     bio: {
         from: "🇹🇷 Türkiye",
