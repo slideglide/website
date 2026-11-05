@@ -4,7 +4,7 @@ export const SITE = {
     emoji: "🌿",
     title: "slideglide",
     description: "Placeholder description for this personal website.",
-    url: "https://example.com",
+    url: "https://slideglide.github.io",
     bio: {
         from: "🇹🇷 Türkiye",
         work: "I mostly make Geometry Dash mods in C++ using Geode SDK.",
