@@ -1,5 +1,6 @@
 ---
 import { SITE } from "../config/site";
+import { withBase } from "../lib/url";
 import ThemePicker from "../components/ThemePicker.astro";
 import "../styles/tokens.css";
 import "../styles/global.css";
@@ -33,7 +34,7 @@ const favicon = `data:image/svg+xml,${encodeURIComponent(
         <meta name="description" content={description} />
         <link rel="canonical" href={pageUrl} />
         <link rel="icon" href={favicon} />
-        <link rel="preload" href="/fonts/Figtree-Variable.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preload" href={withBase("/fonts/Figtree-Variable.woff2")} as="font" type="font/woff2" crossorigin />
 
         <meta property="og:type" content={type} />
         <meta property="og:site_name" content={SITE.name} />

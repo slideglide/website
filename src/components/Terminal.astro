@@ -1,11 +1,12 @@
 ---
 import { formatDate, getPosts } from "../lib/posts";
 import { SITE } from "../config/site";
+import { withBase } from "../lib/url";
 
 const posts = (await getPosts()).map(({ id, data }) => ({
     title: data.title,
     date: formatDate(data.date),
-    url: `/blog/${id}/`,
+    url: withBase(`/blog/${id}/`),
 }));
 ---
 

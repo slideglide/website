@@ -1,5 +1,6 @@
 ---
 import { SITE } from "../../config/site";
+import { withBase } from "../../lib/url";
 import Layout from "../../layouts/Layout.astro";
 import BackLink from "../../components/BackLink.astro";
 import Footer from "../../components/Footer.astro";
@@ -12,7 +13,7 @@ const posts = await getPosts();
 
 <Layout title={`Blog · ${SITE.title}`}>
     <main>
-        <div class="back"><BackLink href="/" label="Home" /></div>
+        <div class="back"><BackLink href={withBase("/")} label="Home" /></div>
         <h1>Blog</h1>
         {posts.length > 0 ? <PostList posts={posts} heading="h2" /> : <p>No posts yet.</p>}
     </main>

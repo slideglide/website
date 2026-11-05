@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatDate } from "../lib/posts";
+import { withBase } from "../lib/url";
 
 interface Props {
     posts: CollectionEntry<"blog">[];
@@ -15,7 +16,7 @@ const { posts, heading: Heading } = Astro.props;
         posts.map(({ id, data }) => (
             <li>
                 <Heading class="title">
-                    <a href={`/blog/${id}/`}>{data.title}</a>
+                    <a href={withBase(`/blog/${id}/`)}>{data.title}</a>
                 </Heading>
                 {data.description && <p>{data.description}</p>}
                 <time datetime={data.date.toISOString()}>{formatDate(data.date)}</time>

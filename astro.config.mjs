@@ -3,6 +3,7 @@ import { SITE } from "./src/config/site.ts";
 
 export default defineConfig({
     site: SITE.url,
+    base: "/website",
     output: "static",
     markdown: {
         shikiConfig: {

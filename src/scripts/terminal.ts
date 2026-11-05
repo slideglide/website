@@ -3,6 +3,7 @@ import { LEAF } from "../data/leaf";
 import { PROJECTS } from "../data/projects";
 import { SOGGY, SOGGY_COLORS, SOGGY_PALETTE } from "../data/soggy";
 import { SOCIALS } from "../data/socials";
+import { withBase } from "../lib/url";
 
 const dialog = document.querySelector<HTMLDialogElement>("#terminal")!;
 const output = document.querySelector<HTMLElement>("#terminal-output")!;
@@ -73,8 +74,8 @@ interface Command {
 
 const OPEN_TARGETS = [
     ...SOCIALS.map(({ label, url }) => ({ name: label.toLowerCase(), url })),
-    { name: "blog", url: "/blog/" },
-    { name: "home", url: "/" },
+    { name: "blog", url: withBase("/blog/") },
+    { name: "home", url: withBase("/") },
 ];
 
 const FOLDERS = [

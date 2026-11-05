@@ -1,11 +1,12 @@
 ---
 import { SITE } from "../config/site";
+import { withBase } from "../lib/url";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title={`Page not found · ${SITE.title}`}>
     <main>
         <h1>Page not found</h1>
-        <p>There's nothing at this address. <a href="/">Go back home</a>.</p>
+        <p>There's nothing at this address. <a href={withBase("/")}>Go back home</a>.</p>
     </main>
 </Layout>
