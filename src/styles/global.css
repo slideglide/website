@@ -1,11 +1,3 @@
-@font-face {
-    font-family: "Figtree";
-    src: url("/fonts/Figtree-Variable.woff2") format("woff2");
-    font-weight: 300 900;
-    font-style: normal;
-    font-display: swap;
-}
-
 *,
 *::before,
 *::after {

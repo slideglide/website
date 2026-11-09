@@ -10,6 +10,10 @@ import Section from "./Section.astro";
             <dd>{SITE.bio.from}</dd>
         </div>
         <div>
+            <dt>Local time</dt>
+            <dd id="local-time" data-time-zone={SITE.bio.timeZone}>{SITE.bio.utcOffset}</dd>
+        </div>
+        <div>
             <dt>What I do</dt>
             <dd>{SITE.bio.work}</dd>
         </div>
@@ -43,6 +47,25 @@ import Section from "./Section.astro";
     </dl>
 </Section>
 
+<script>
+    const localTime = document.querySelector<HTMLElement>("#local-time")!;
+    const utcOffset = localTime.textContent;
+    const clock = new Intl.DateTimeFormat("en-GB", {
+        timeZone: localTime.dataset.timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23",
+    });
+
+    function tick() {
+        localTime.textContent = `${clock.format()} (${utcOffset})`;
+        setTimeout(tick, 1000 - (Date.now() % 1000));
+    }
+
+    tick();
+</script>
+
 <style>
     dl {
         margin: -0.625rem 0;
@@ -70,6 +93,10 @@ import Section from "./Section.astro";
         margin: 0;
         color: var(--text-primary);
         overflow-wrap: anywhere;
+    }
+
+    #local-time {
+        font-variant-numeric: tabular-nums;
     }
 
     ul {

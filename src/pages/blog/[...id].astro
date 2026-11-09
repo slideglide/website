@@ -18,7 +18,14 @@ const { title, date, description } = post.data;
 const { Content } = await render(post);
 ---
 
-<Layout title={`${title} · ${SITE.title}`} description={description} type="article">
+<Layout
+    title={`${title} · ${SITE.title}`}
+    description={description}
+    type="article"
+    ogTitle={title}
+    ogImage={`/og/blog/${post.id}.png`}
+    published={date}
+>
     <main>
         <div class="back"><BackLink href={withBase("/blog/")} label="All posts" /></div>
         <article>

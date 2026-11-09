@@ -4,9 +4,13 @@ export const SITE = {
     emoji: "🌿",
     title: "slideglide",
     description: "slideglide's personal website",
+    blogDescription: "Posts by slideglide",
     url: "https://slideglide.github.io",
+    ogImage: { width: 1200, height: 630 },
     bio: {
         from: "🇹🇷 Türkiye",
+        timeZone: "Europe/Istanbul",
+        utcOffset: "UTC+3",
         work: "I mostly make Geometry Dash mods in C++ using Geode SDK.",
         tools: ["C++", "Geode SDK"],
         contributions: [

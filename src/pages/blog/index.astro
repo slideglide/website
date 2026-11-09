@@ -11,7 +11,7 @@ import { getPosts } from "../../lib/posts";
 const posts = await getPosts();
 ---
 
-<Layout title={`Blog · ${SITE.title}`}>
+<Layout title={`Blog · ${SITE.title}`} description={SITE.blogDescription} ogTitle="Blog" ogImage="/og/blog.png">
     <main>
         <div class="back"><BackLink href={withBase("/")} label="Home" /></div>
         <h1>Blog</h1>
